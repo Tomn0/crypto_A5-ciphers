@@ -5,41 +5,7 @@ import math
 from kasumi import Kasumi
 
 
-def XOR(bits1, bits2):
-    """perform a XOR operation and return the output"""
-    # ciągi muszą być równej długości
-    xor_result = ""
-    for index in range(len(bits1)):
-        if bits1[index] == bits2[index]:
-            xor_result += '0'
-        else:
-            xor_result += '1'
-    return xor_result
-
-
-def hexTobinary(hexdigits):
-    binarydigits = ""
-    for hexdigit in hexdigits:
-        binarydigits += bin(int(hexdigit, 16))[2:].zfill(4)
-    return binarydigits
-
-
-def binary_to_decimal(binarybits):
-    """ Convert binary bits to decimal"""
-    decimal = int(binarybits, 2)
-    return decimal
-
-
-def decimal_to_binary(decimal):
-    """ Convert decimal to binary bits"""
-    binary4bits = bin(decimal)[2:].zfill(4)
-    return binary4bits
-
-
 # KGcore
-# cc, ck, ca='00001111', cb='0000',  cd='0', ce='000000000000000',  cl=228
-
-
 def kgcore(ca, cb, cc, cd, ce, ck, cl):
 
     # ca 8bit
@@ -54,10 +20,7 @@ def kgcore(ca, cb, cc, cd, ce, ck, cl):
     # initalisation
     a = cc + cb + cd + "00" + ca + ce
 
-    # convert a to hex
-
     km = 0x55555555555555555555555555555555
-    # km = hexTobinary('55555555555555555555555555555555')
 
     a = int(a, 2)
 
@@ -67,14 +30,13 @@ def kgcore(ca, cb, cc, cd, ce, ck, cl):
 
     # should be 4
     BLOCKS = math.ceil(cl/64)
+
     KSB = [0] * (BLOCKS + 1)
     KSB[0] = 0
 
-    # co = [None] * BLOCKS
     co = ""
 
     for n in range(BLOCKS):
-
         BLKCNT = n
 
         KSB[n+1] = KASUMI(a ^ BLKCNT ^ KSB[n], ck)
@@ -88,24 +50,7 @@ def kgcore(ca, cb, cc, cd, ce, ck, cl):
 
 # test
 def KASUMI(inp, key):
-    # inp 64bits
-    # translate into hexadecimal
-
-    # hex_inp = hex(int(inp, 2)).zfill(16)
-    # hex_key = hex(int(key, 2)).zfill(32)
-
-    # hex_inp = "{0:#0{1}x}".format(int(inp, 2), 16)
-    # hex_key = "{0:#0{1}x}".format(int(key, 2), 32)
-    # źródło: https://stackoverflow.com/questions/12638408/decorating-hex-function-to-pad-zeros
-
-    # hex_inp = int(inp, 2)
-    # hex_key = int(key, 2)
-
-    # print(hex(hex_inp))
-    # print(hex(hex_key))
-
     kasumi = Kasumi()
-    # print(hex(key))
     kasumi.set_key(key)
 
     return kasumi.enc(inp)
