@@ -4,6 +4,19 @@
 import math
 from kasumi import Kasumi
 
+# definiujemy potrzebne operacje na bitach
+'''
+def XOR(bits1, bits2):
+    pass
+    
+def bin_to_hex():
+    pass
+    
+def hex_to_bin():
+    pass
+
+'''
+
 
 # KGcore
 def kgcore(ca, cb, cc, cd, ce, ck, cl):
@@ -18,6 +31,7 @@ def kgcore(ca, cb, cc, cd, ce, ck, cl):
     # co output cl bits
 
     # initalisation
+    # sum to 64bits
     a = cc + cb + cd + "00" + ca + ce
 
     km = 0x55555555555555555555555555555555
@@ -39,18 +53,30 @@ def kgcore(ca, cb, cc, cd, ce, ck, cl):
     for n in range(BLOCKS):
         BLKCNT = n
 
+        print(BLKCNT)
+        print(a)
         KSB[n+1] = KASUMI(a ^ BLKCNT ^ KSB[n], ck)
 
-        co = co + str(bin(KSB[n+1])[2:].zfill(64))
+        print(KSB)
 
-    print(co)
+        co = co + str(bin(KSB[n+1])[2:].zfill(64))
+        print("co: ", co)
+
+    print("Before truncating: ", len(co))
+    # truncate
+    co = co[:len(co) - 28]
+
+    print("After truncating: ", len(co))
+    print("co: ", co)
 
     return co
 
 
 # test
 def KASUMI(inp, key):
+    # takes 64bits long input and 128bits long key
     kasumi = Kasumi()
+
     kasumi.set_key(key)
 
     return kasumi.enc(inp)
@@ -63,10 +89,10 @@ def a5_3_encryption(count, kc):
     klen = 64
 
     ca = '00001111'
-    cb = '0000'
-    cc = '000000000' + count
+    cb = '00000'
+    cc = '0000000000' + count
     cd = '0'
-    ce = '000000000000000'
+    ce = '0000000000000000'
     # ck = kc[0:klen]
     ck = kc
     cl = 228
@@ -74,9 +100,9 @@ def a5_3_encryption(count, kc):
     co = kgcore(ca, cb, cc, cd, ce, ck, cl)
 
     # uplink
-    BLOCK1 = co[0:128]
+    BLOCK1 = co[0:114]
     # downlink
-    BLOCK2 = co[128:]
+    BLOCK2 = co[114:]
     # print(co)
     # print(type(co))
     # print(len(co))
@@ -86,5 +112,6 @@ def a5_3_encryption(count, kc):
 
 # tests
 
-
+# input: 22 bits long frame number and 128bits long key (in hex 32 digits)
 a5_3_encryption('0101010101001010101010', 0x9900aabbccddeeff1122334455667788)
+
