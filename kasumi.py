@@ -1,5 +1,7 @@
 # Kasumi, modified version of code from: https://asecuritysite.com/encryption/kasumi
+# original source: https://github.com/bozhu/KASUMI-Python
 # comments and description based on: https://cryptography.fandom.com/wiki/KASUMI_(block_cipher)
+
 
 '''
 KASUMI is a block cipher with 128-bit key and 64-bit input and output.
@@ -8,9 +10,6 @@ The round functions in the main Feistel network are irreversible Feistel-like ne
 In each round the round function uses a round key which consists of eight 16-bit sub keys
 derived from the original 128-bit key using a fixed key schedule.
 '''
-
-
-
 
 # usefull functions
 def _bitlen(x):
